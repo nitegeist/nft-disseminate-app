@@ -16,14 +16,22 @@ export const FileUpload: FC<React.PropsWithChildren<unknown>> = () => {
 			value = '';
 			alert('Please select correct file format');
 		} else {
-			for (let file of files) {
-				Papa.parse(file, {
-					header: true,
-					complete: (results: CSVData) => {
-						console.log(results.data);
-					},
-				});
-			}
+			files && files.length
+				? Papa.parse(files[0], {
+						header: true,
+						complete: (results: CSVData) => {
+							const addresses: unknown[] = [];
+							results.data.map((el) => {
+								Object.entries(el).map(([key, value]) => {
+									if (key === 'memberAddress') {
+										addresses.push(value);
+									}
+								});
+							});
+							console.log(addresses);
+						},
+				  })
+				: null;
 		}
 	};
 	return (
