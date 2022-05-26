@@ -2,7 +2,7 @@ import { ChangeEvent, FC } from 'react';
 import styles from '../styles/Home.module.css';
 const Papa = require('papaparse');
 
-interface CSVData {
+interface FileData {
 	data: [];
 	errors: [];
 	meta: Object;
@@ -19,7 +19,7 @@ export const FileUpload: FC<React.PropsWithChildren<unknown>> = () => {
 			files && files.length
 				? Papa.parse(files[0], {
 						header: true,
-						complete: (results: CSVData) => {
+						complete: (results: FileData) => {
 							const addresses: unknown[] = [];
 							results.data.map((el) => {
 								Object.entries(el).map(([key, value]) => {
