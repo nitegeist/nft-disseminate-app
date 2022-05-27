@@ -1,39 +1,22 @@
 import { ChangeEvent, FC } from 'react';
 import styles from '../styles/Home.module.css';
-const Papa = require('papaparse');
 
-interface FileData {
-	data: [];
-	errors: [];
-	meta: Object;
+interface Props {
+	parseFile: (file: unknown) => void;
 }
 
-export const FileUpload: FC<React.PropsWithChildren<unknown>> = () => {
-	const handleFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
+export const FileUpload: FC<React.PropsWithChildren<Props>> = ({ parseFile }) => {
+	const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
 		let { value, files } = e.target;
 		var regex = new RegExp('(.*?).(csv)$');
 		if (!regex.test(value.toLowerCase())) {
 			value = '';
 			alert('Please select correct file format');
 		} else {
-			files && files.length
-				? Papa.parse(files[0], {
-						header: true,
-						complete: (results: FileData) => {
-							const addresses: unknown[] = [];
-							results.data.map((el) => {
-								Object.entries(el).map(([key, value]) => {
-									if (key === 'memberAddress') {
-										addresses.push(value);
-									}
-								});
-							});
-							console.log(addresses);
-						},
-				  })
-				: null;
+			files && files.length ? parseFile(files[0]) : null;
 		}
 	};
+
 	return (
 		<>
 			<form encType='multipart/form-data' className={styles.column}>
